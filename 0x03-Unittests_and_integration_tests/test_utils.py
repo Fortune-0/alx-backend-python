@@ -4,7 +4,10 @@
 import unittest
 from parameterized import parameterized
 from typing import Dict, Tuple, Union
-
+from utils import (
+    access_nested_map,
+    get_json
+)
 
 class TestAccessNestedMap(unittest.TestCase()):
     """Tests the `access_nested_map` function."""
@@ -18,3 +21,15 @@ class TestAccessNestedMap(unittest.TestCase()):
                                expected: Union[dict, int]) -> None:
         """Tests `access_nested_map`'s output."""
         self.assertEqual(access_nested_map(nested_map, path), expected)
+        
+        @parameterized.expand([
+        ({}, ("a",), KeyError),
+        ({"a": 1}, ("a", "b"), KeyError),
+        ])
+        
+        def test_access_nested_map_exception(self, nested_map: dict,
+                               path: tuple[str],
+                               exception: Exception) -> None:
+            """Tests `access_nested_map`'s output."""
+            with self.assertRaises(exception):
+                access_nested_map(nested_map, path)
